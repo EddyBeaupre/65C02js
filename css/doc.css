@@ -1,3 +1,11 @@
+.center-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .doc {
   margin: 5px;
   border: 1px;
@@ -105,7 +113,7 @@ BD {
   width: 600px;
 }
 
-.doc-container{
+.doc-container {
   padding: 4px;
 }
 
