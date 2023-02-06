@@ -1,75 +1,1015 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
-  <head>
-    <link href="style.css" rel="stylesheet" type="text/css" />
-    <title>6502 assembler/simulator</title>
-  </head>
-  <body>
 
-    <div class="widget">
-      <div class="buttons">
-        <input type="button" value="Assemble" class="assembleButton" />
-        <input type="button" value="Run" class="runButton" />
-        <input type="button" value="Reset" class="resetButton" />
-        <input type="button" value="Hexdump" class="hexdumpButton" />
-        <input type="button" value="Disassemble" class="disassembleButton" />
-        <input type="button" value="Notes" class="notesButton" />
-      </div>
+<head>
+    <title>65C02 Simulator</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/w3.css">
+    <link rel="stylesheet" href="css/widget.css">
+    <link rel="stylesheet" href="css/doc.css">
+</head>
 
-      <textarea class="code"></textarea>
+<body>
+    <div class="w3-container w3-padding-16">
+        <div class="w3-row w3-mobile">
+            <div class="w3-col w3-mobil widget-size widget-border">
+                <div class="widget">
+                    <div class="widget-editor">
+                        <textarea class="widget-editor-code widget-border"></textarea>
+                        <div class="widget-editor-ctrl widget-border-lrb">
+                            <div class="widget-editor-ctrl-asm"><button class="widget-button widget-blue widget-editor-ctrl-btn-asm">Assemble</button></div>
+                            <div class="widget-editor-ctrl-run"><button class="widget-button widget-blue widget-editor-ctrl-btn-run">Run</button></div>
+                            <div class="widget-editor-ctrl-hex"><button class="widget-button widget-blue widget-editor-ctrl-btn-hex">Hexdump</button></div>
+                            <div class="widget-editor-ctrl-dsm"><button class="widget-button widget-blue widget-editor-ctrl-btn-dsm">Disassemble</button></div>
+                            <div class="widget-editor-ctrl-rts"><button class="widget-button widget-blue widget-editor-ctrl-btn-rst">Reset</button></div>
+                            <div class="widget-editor-ctrl-nts"><button class="widget-button widget-blue widget-editor-ctrl-btn-nts">Notes</button></div>
+                        </div>
+                    </div>
 
-      <canvas class="screen" width="160" height="160"></canvas>
+                    <div class="widget-control widget-monospace widget-border-trb">
+                        <div class="widget-debugger">
+                            <div class="widget-dark-grey widget-debugger-display">
+                                <canvas class="widget-debug-canvas" width="160" height="160"></canvas>
+                            </div>
+                            <div class="widget-debugger-cpu">
+                                <div class="widget-center widget-small widget-debug-reg">
+                                    <div class="widget-debug-reg-a">A</div>
+                                    <div class="widget-debug-reg-x">X</div>
+                                    <div class="widget-debug-reg-y">Y</div>
+                                    <div class="widget-border-tb widget-debug-val-a"></div>
+                                    <div class="widget-border widget-debug-val-x"></div>
+                                    <div class="widget-border-tb widget-debug-val-y"></div>
+                                </div>
+                                <div class="widget-debug-sta widget-center widget-small">
+                                    <div class="widget-debug-sta-sp">SP</div>
+                                    <div class="widget-debug-sta-pc">PC</div>
+                                    <div class="widget-border-trb widget-debug-val-sp"></div>
+                                    <div class="widget-border-tb widget-debug-val-pc"></div>
+                                </div>
+                                <div class="widget-debug-spc1"></div>
+                                <div class="widget-debug-flg widget-center widget-small">
+                                    <div class="widget-debug-flg-t"></div>
+                                    <div class="widget-debug-flg-7">
+                                        <div class="widget-led-off widget-debug-led-7">N</div>
+                                    </div>
+                                    <div class="widget-debug-flg-6">
+                                        <div class="widget-led-off widget-debug-led-6">V</div>
+                                    </div>
+                                    <div class="widget-debug-flg-5">
+                                        <div class="widget-led-off widget-debug-led-5">-</div>
+                                    </div>
+                                    <div class="widget-debug-flg-4">
+                                        <div class="widget-led-off widget-debug-led-4">B</div>
+                                    </div>
+                                    <div class="widget-debug-flg-3">
+                                        <div class="widget-led-off widget-debug-led-3">D</div>
+                                    </div>
+                                    <div class="widget-debug-flg-2">
+                                        <div class="widget-led-off widget-debug-led-2">I</div>
+                                    </div>
+                                    <div class="widget-debug-flg-1">
+                                        <div class="widget-led-off widget-debug-led-1">Z</div>
+                                    </div>
+                                    <div class="widget-debug-flg-0">
+                                        <div class="widget-led-off widget-debug-led-0">C</div>
+                                    </div>
+                                    <div class="widget-debug-flg-b"></div>
+                                </div>
+                                <div class="widget-debug-spc2"></div>
+                                <div class="widget-debug-ctrl">
+                                    <div class="widget-tiny widget-center widget-debug-enable">
+                                        <label class="widget-switch">
+                                            <input type="checkbox" class="widget-debug-checkbox">
+                                            <span class="widget-slider round"></span>
+                                        </label>
+                                        Debugger
+                                    </div>
+                                    <div class="widget-debug-spc3"></div>
+                                    <div class="widget-debug-step">
+                                        <button class="widget-button widget-blue widget-debug-btn-step">Step</button>
+                                    </div>
+                                    <div class="widget-debug-jump">
+                                        <button class="widget-button widget-blue widget-debug-btn-goto">Jump</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="widget-memory widget-border-tb">
+                            <div class="widget-memory-start">
+                                <label for="start">Start: $&nbsp;</label>
+                                <input type="text" value="0" class="widget-memory-start-input" name="start" maxlength="4" size="5" style="width: 4em">
+                            </div>
+                            <div class="widget-memory-length">
+                                <label for="length">length: $&nbsp;</label>
+                                <input type="text" value="100" class="widget-memory-length-input" name="length" maxlength="4" size="5" style="width: 4em">
+                            </div>
+                            <div class="widget-memory-dump widget-small widget-monitor"></div>
+                        </div>
+                        <div class="widget-small widget-message"></div>
+                    </div>
+                </div>
+            </div>
 
-      <div class="debugger">
-        <input type="checkbox" class="debug" name="debug" />
-        <label for="debug">Debugger</label>
-        <div class="minidebugger"></div>
-        <div class="buttons">
-          <input type="button" value="Step" class="stepButton" />
-          <input type="button" value="Jump to ..." class="gotoButton" />
+            <div class="w3-col w3-mobil widget-size widget-border">
+                <div class="w3-display-container doc widget-border">
+                    <div class="hcr">&nbsp;</div>
+                    <div class="hc0 doc-header">0</div>
+                    <div class="hc1 doc-header">1</div>
+                    <div class="hc2 doc-header">2</div>
+                    <div class="hc3 doc-header">3</div>
+                    <div class="hc4 doc-header">4</div>
+                    <div class="hc5 doc-header">5</div>
+                    <div class="hc6 doc-header">6</div>
+                    <div class="hc7 doc-header">7</div>
+                    <div class="hc8 doc-header">8</div>
+                    <div class="hc9 doc-header">9</div>
+                    <div class="hca doc-header">A</div>
+                    <div class="hcb doc-header">B</div>
+                    <div class="hcc doc-header">C</div>
+                    <div class="hcd doc-header">D</div>
+                    <div class="hce doc-header">E</div>
+                    <div class="hcf doc-header">F</div>
+
+                    <div class="hr0 doc-header">0</div>
+                    <button class="c00 doc-cell" onclick="docShow('BRK');">
+                        <BD>BRK</BD><br>s
+                    </button>
+                    <button class="c01 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>(z,X)
+                    </button>
+                    <button class="c02 doc-cell" disabled>&nbsp;</button>
+                    <button class="c03 doc-cell" disabled>&nbsp;</button>
+                    <button class="c04 doc-cell" onclick="docShow('TSB');">
+                        <BD>TSB</BD><br>z
+                    </button>
+                    <button class="c05 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>z
+                    </button>
+                    <button class="c06 doc-cell" onclick="docShow('ASL');">
+                        <BD>ASL</BD><br>z
+                    </button>
+                    <button class="c07 doc-cell" onclick="docShow('RMB', 0);">
+                        <BD>RMB0</BD><br>z
+                    </button>
+                    <button class="c08 doc-cell" onclick="docShow('PHP');">
+                        <BD>PHP</BD><br>s
+                    </button>
+                    <button class="c09 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>#
+                    </button>
+                    <button class="c0a doc-cell" onclick="docShow('ASL');">
+                        <BD>ASL</BD><br>A
+                    </button>
+                    <button class="c0b doc-cell" disabled>&nbsp;</button>
+                    <button class="c0c doc-cell" onclick="docShow('TSB');">
+                        <BD>TSB</BD><br>a
+                    </button>
+                    <button class="c0d doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>a
+                    </button>
+                    <button class="c0e doc-cell" onclick="docShow('ASL');">
+                        <BD>ASL</BD><br>a
+                    </button>
+                    <button class="c0f doc-cell" onclick="docShow('BBR', 0);">
+                        <BD>BBR0</BD><br>r
+                    </button>
+
+                    <div class="hr1 doc-header">1</div>
+                    <button class="c10 doc-cell" onclick="docShow('BPL');">
+                        <BD>BPL</BD><br>r
+                    </button>
+                    <button class="c11 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>(z),Y
+                    </button>
+                    <button class="c12 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>(z)
+                    </button>
+                    <button class="c13 doc-cell" disabled>&nbsp;</button>
+                    <button class="c14 doc-cell" onclick="docShow('TRB');">
+                        <BD>TRB</BD><br>z
+                    </button>
+                    <button class="c15 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>z,X
+                    </button>
+                    <button class="c16 doc-cell" onclick="docShow('ASL');">
+                        <BD>ASL</BD><br>z,X
+                    </button>
+                    <button class="c17 doc-cell" onclick="docShow('RMB', 1);">
+                        <BD>RMB1</BD><br>z
+                    </button>
+                    <button class="c18 doc-cell" onclick="docShow('CLC');">
+                        <BD>CLC</BD><br>i
+                    </button>
+                    <button class="c19 doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>a,Y
+                    </button>
+                    <button class="c1a doc-cell" onclick="docShow('INC');">
+                        <BD>INC</BD><br>A
+                    </button>
+                    <button class="c1b doc-cell" disabled>&nbsp;</button>
+                    <button class="c1c doc-cell" onclick="docShow('TRB');">
+                        <BD>TRB</BD><br>a
+                    </button>
+                    <button class="c1d doc-cell" onclick="docShow('ORA');">
+                        <BD>ORA</BD><br>a,X
+                    </button>
+                    <button class="c1e doc-cell" onclick="docShow('ASL');">
+                        <BD>ASL</BD><br>a,X
+                    </button>
+                    <button class="c1f doc-cell" onclick="docShow('BBR', 1);">
+                        <BD>BBR1</BD><br>r
+                    </button>
+
+                    <div class="hr2 doc-header">2</div>
+                    <button class="c20 doc-cell" onclick="docShow('JSR');">
+                        <BD>JSR</BD><br>a
+                    </button>
+                    <button class="c21 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>(z,X)
+                    </button>
+                    <button class="c22 doc-cell" disabled>&nbsp;</button>
+                    <button class="c23 doc-cell" disabled>&nbsp;</button>
+                    <button class="c24 doc-cell" onclick="docShow('BIT');">
+                        <BD>BIT</BD><br>z
+                    </button>
+                    <button class="c25 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>z
+                    </button>
+                    <button class="c26 doc-cell" onclick="docShow('ROL');">
+                        <BD>ROL</BD><br>z
+                    </button>
+                    <button class="c27 doc-cell" onclick="docShow('RMB', 2);">
+                        <BD>RMB2</BD><br>z
+                    </button>
+                    <button class="c28 doc-cell" onclick="docShow('PLP');">
+                        <BD>PLP</BD><br>s
+                    </button>
+                    <button class="c29 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>#
+                    </button>
+                    <button class="c2a doc-cell" onclick="docShow('ROL');">
+                        <BD>ROL</BD><br>A
+                    </button>
+                    <button class="c2b doc-cell" disabled>&nbsp;</button>
+                    <button class="c2c doc-cell" onclick="docShow('BIT');">
+                        <BD>BIT</BD><br>a
+                    </button>
+                    <button class="c2d doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>a
+                    </button>
+                    <button class="c2e doc-cell" onclick="docShow('ROL');">
+                        <BD>ROL</BD><br>a
+                    </button>
+                    <button class="c2f doc-cell" onclick="docShow('BBR', 2);">
+                        <BD>BBR2</BD><br>r
+                    </button>
+
+                    <div class="hr3 doc-header">3</div>
+                    <button class="c30 doc-cell" onclick="docShow('BMI');">
+                        <BD>BMI</BD><br>r
+                    </button>
+                    <button class="c31 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>(z),Y
+                    </button>
+                    <button class="c32 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>(z)
+                    </button>
+                    <button class="c33 doc-cell" disabled>&nbsp;</button>
+                    <button class="c34 doc-cell" onclick="docShow('BIT');">
+                        <BD>BIT</BD><br>z,X
+                    </button>
+                    <button class="c35 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>z,X
+                    </button>
+                    <button class="c36 doc-cell" onclick="docShow('ROL');">
+                        <BD>ROL</BD><br>z,X
+                    </button>
+                    <button class="c37 doc-cell" onclick="docShow('RMB', 3);">
+                        <BD>RMB3</BD><br>z
+                    </button>
+                    <button class="c38 doc-cell" onclick="docShow('SEC');">
+                        <BD>SEC</BD><br>i
+                    </button>
+                    <button class="c39 doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>a,Y
+                    </button>
+                    <button class="c3a doc-cell" onclick="docShow('DEC');">
+                        <BD>DEC</BD><br>A
+                    </button>
+                    <button class="c3b doc-cell" disabled>&nbsp;</button>
+                    <button class="c3c doc-cell" onclick="docShow('BIT');">
+                        <BD>BIT</BD><br>a,X
+                    </button>
+                    <button class="c3d doc-cell" onclick="docShow('AND');">
+                        <BD>AND</BD><br>a,X
+                    </button>
+                    <button class="c3e doc-cell" onclick="docShow('ROL');">
+                        <BD>ROL</BD><br>a,X
+                    </button>
+                    <button class="c3f doc-cell" onclick="docShow('BBR', 3);">
+                        <BD>BBR3</BD><br>r
+                    </button>
+
+                    <div class="hr4 doc-header">4</div>
+                    <button class="c40 doc-cell" onclick="docShow('RTI');">
+                        <BD>RTI</BD><br>s
+                    </button>
+                    <button class="c41 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>(z,X)
+                    </button>
+                    <button class="c42 doc-cell" disabled>&nbsp;</button>
+                    <button class="c43 doc-cell" disabled>&nbsp;</button>
+                    <button class="c44 doc-cell" disabled>&nbsp;</button>
+                    <button class="c45 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>z
+                    </button>
+                    <button class="c46 doc-cell" onclick="docShow('LSR');">
+                        <BD>LSR</BD><br>z
+                    </button>
+                    <button class="c47 doc-cell" onclick="docShow('RMB', 4);">
+                        <BD>RMB4</BD><br>z
+                    </button>
+                    <button class="c48 doc-cell" onclick="docShow('PHA');">
+                        <BD>PHA</BD><br>s
+                    </button>
+                    <button class="c49 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>#
+                    </button>
+                    <button class="c4a doc-cell" onclick="docShow('LSR');">
+                        <BD>LSR</BD><br>A
+                    </button>
+                    <button class="c4b doc-cell" disabled>&nbsp;</button>
+                    <button class="c4c doc-cell" onclick="docShow('JMP');">
+                        <BD>JMP</BD><br>a
+                    </button>
+                    <button class="c4d doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>a
+                    </button>
+                    <button class="c4e doc-cell" onclick="docShow('LSR');">
+                        <BD>LSR</BD><br>a
+                    </button>
+                    <button class="c4f doc-cell" onclick="docShow('BBR', 4);">
+                        <BD>BBR4</BD><br>r
+                    </button>
+
+                    <div class="hr5 doc-header">5</div>
+                    <button class="c50 doc-cell" onclick="docShow('BVC');">
+                        <BD>BVC</BD><br>r
+                    </button>
+                    <button class="c51 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>(z),Y
+                    </button>
+                    <button class="c52 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>(z)
+                    </button>
+                    <button class="c53 doc-cell" disabled>&nbsp;</button>
+                    <button class="c54 doc-cell" disabled>&nbsp;</button>
+                    <button class="c55 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>z,X
+                    </button>
+                    <button class="c56 doc-cell" onclick="docShow('LSR');">
+                        <BD>LSR</BD><br>z,X
+                    </button>
+                    <button class="c57 doc-cell" onclick="docShow('RMB', 5);">
+                        <BD>RMB5</BD><br>z
+                    </button>
+                    <button class="c58 doc-cell" onclick="docShow('CLI');">
+                        <BD>CLI</BD><br>i
+                    </button>
+                    <button class="c59 doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>a,Y
+                    </button>
+                    <button class="c5a doc-cell" onclick="docShow('PHY');">
+                        <BD>PHY</BD><br>s
+                    </button>
+                    <button class="c5b doc-cell" disabled>&nbsp;</button>
+                    <button class="c5c doc-cell" disabled>&nbsp;</button>
+                    <button class="c5d doc-cell" onclick="docShow('EOR');">
+                        <BD>EOR</BD><br>a,X
+                    </button>
+                    <button class="c5e doc-cell" onclick="docShow('LSR');">
+                        <BD>LSR</BD><br>a,X
+                    </button>
+                    <button class="c5f doc-cell" onclick="docShow('BBR', 5);">
+                        <BD>BBR5</BD><br>r
+                    </button>
+
+                    <div class="hr6 doc-header">6</div>
+                    <button class="c60 doc-cell" onclick="docShow('RTS');">
+                        <BD>RTS</BD><br>s
+                    </button>
+                    <button class="c61 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>(z,X)
+                    </button>
+                    <button class="c62 doc-cell" disabled>&nbsp;</button>
+                    <button class="c63 doc-cell" disabled>&nbsp;</button>
+                    <button class="c64 doc-cell" onclick="docShow('STZ');">
+                        <BD>STZ</BD><br>z
+                    </button>
+                    <button class="c65 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>z
+                    </button>
+                    <button class="c66 doc-cell" onclick="docShow('ROR');">
+                        <BD>ROR</BD><br>z
+                    </button>
+                    <button class="c67 doc-cell" onclick="docShow('RMB', 6);">
+                        <BD>RMB6</BD><br>z
+                    </button>
+                    <button class="c68 doc-cell" onclick="docShow('PLA');">
+                        <BD>PLA</BD><br>s
+                    </button>
+                    <button class="c69 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>#
+                    </button>
+                    <button class="c6a doc-cell" onclick="docShow('ROR');">
+                        <BD>ROR</BD><br>A
+                    </button>
+                    <button class="c6b doc-cell" disabled>&nbsp;</button>
+                    <button class="c6c doc-cell" onclick="docShow('JMP');">
+                        <BD>JMP</BD><br>(a)
+                    </button>
+                    <button class="c6d doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>a
+                    </button>
+                    <button class="c6e doc-cell" onclick="docShow('ROR');">
+                        <BD>ROR</BD><br>a
+                    </button>
+                    <button class="c6f doc-cell" onclick="docShow('BBR', 6);">
+                        <BD>BBR6</BD><br>r
+                    </button>
+
+                    <div class="hr7 doc-header">7</div>
+                    <button class="c70 doc-cell" onclick="docShow('BVS');">
+                        <BD>BVS</BD><br>r
+                    </button>
+                    <button class="c71 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>(z),Y
+                    </button>
+                    <button class="c72 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>(z)
+                    </button>
+                    <button class="c73 doc-cell" disabled>&nbsp;</button>
+                    <button class="c74 doc-cell" onclick="docShow('STZ');">
+                        <BD>STZ</BD><br>z,X
+                    </button>
+                    <button class="c75 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>z,X
+                    </button>
+                    <button class="c76 doc-cell" onclick="docShow('ROR');">
+                        <BD>ROR</BD><br>z,X
+                    </button>
+                    <button class="c77 doc-cell" onclick="docShow('RMB', 7);">
+                        <BD>RMB7</BD><br>z
+                    </button>
+                    <button class="c78 doc-cell" onclick="docShow('SEI');">
+                        <BD>SEI</BD><br>i
+                    </button>
+                    <button class="c79 doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>a,Y
+                    </button>
+                    <button class="c7a doc-cell" onclick="docShow('PLY');">
+                        <BD>PLY</BD><br>s
+                    </button>
+                    <button class="c7b doc-cell" disabled>&nbsp;</button>
+                    <button class="c7c doc-cell" onclick="docShow('JMP');">
+                        <BD>JMP</BD><br>(a,X)
+                    </button>
+                    <button class="c7d doc-cell" onclick="docShow('ADC');">
+                        <BD>ADC</BD><br>a,X
+                    </button>
+                    <button class="c7e doc-cell" onclick="docShow('ROR');">
+                        <BD>ROR</BD><br>a,X
+                    </button>
+                    <button class="c7f doc-cell" onclick="docShow('BBR', 7);">
+                        <BD>BBR7</BD><br>r
+                    </button>
+
+                    <div class="hr8 doc-header">8</div>
+                    <button class="c80 doc-cell" onclick="docShow('BRA');">
+                        <BD>BRA</BD><br>r
+                    </button>
+                    <button class="c81 doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>(z,X)
+                    </button>
+                    <button class="c82 doc-cell" disabled>&nbsp;</button>
+                    <button class="c83 doc-cell" disabled>&nbsp;</button>
+                    <button class="c84 doc-cell" onclick="docShow('STY');">
+                        <BD>STY</BD><br>z
+                    </button>
+                    <button class="c85 doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>z
+                    </button>
+                    <button class="c86 doc-cell" onclick="docShow('STX');">
+                        <BD>STX</BD><br>z
+                    </button>
+                    <button class="c87 doc-cell" onclick="docShow('SMB', 0);">
+                        <BD>SMB0</BD><br>z
+                    </button>
+                    <button class="c88 doc-cell" onclick="docShow('DEY');">
+                        <BD>DEY</BD><br>i
+                    </button>
+                    <button class="c89 doc-cell" onclick="docShow('BIT');">
+                        <BD>BIT</BD><br>#
+                    </button>
+                    <button class="c8a doc-cell" onclick="docShow('TXA');">
+                        <BD>TXA</BD><br>i
+                    </button>
+                    <button class="c8b doc-cell" disabled>&nbsp;</button>
+                    <button class="c8c doc-cell" onclick="docShow('STY');">
+                        <BD>STY</BD><br>a
+                    </button>
+                    <button class="c8d doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>a
+                    </button>
+                    <button class="c8e doc-cell" onclick="docShow('STX');">
+                        <BD>STX</BD><br>a
+                    </button>
+                    <button class="c8f doc-cell" onclick="docShow('BBS', 0);">
+                        <BD>BBS0</BD><br>r
+                    </button>
+
+                    <div class="hr9 doc-header">9</div>
+                    <button class="c90 doc-cell" onclick="docShow('BCC');">
+                        <BD>BCC</BD><br>r
+                    </button>
+                    <button class="c91 doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>(z),Y
+                    </button>
+                    <button class="c92 doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>(z)
+                    </button>
+                    <button class="c93 doc-cell" disabled>&nbsp;</button>
+                    <button class="c94 doc-cell" onclick="docShow('STY');">
+                        <BD>STY</BD><br>z,X
+                    </button>
+                    <button class="c95 doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>z,X
+                    </button>
+                    <button class="c96 doc-cell" onclick="docShow('STX');">
+                        <BD>STX</BD><br>z,Y
+                    </button>
+                    <button class="c97 doc-cell" onclick="docShow('SMB', 1);">
+                        <BD>SMB1</BD><br>z
+                    </button>
+                    <button class="c98 doc-cell" onclick="docShow('TYA');">
+                        <BD>TYA</BD><br>i
+                    </button>
+                    <button class="c99 doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>a,Y
+                    </button>
+                    <button class="c9a doc-cell" onclick="docShow('TXS');">
+                        <BD>TXS</BD><br>i
+                    </button>
+                    <button class="c9b doc-cell" disabled>&nbsp;</button>
+                    <button class="c9c doc-cell" onclick="docShow('STZ');">
+                        <BD>STZ</BD><br>a
+                    </button>
+                    <button class="c9d doc-cell" onclick="docShow('STA');">
+                        <BD>STA</BD><br>a,X
+                    </button>
+                    <button class="c9e doc-cell" onclick="docShow('STZ');">
+                        <BD>STZ</BD><br>a,X
+                    </button>
+                    <button class="c9f doc-cell" onclick="docShow('BBS', 1);">
+                        <BD>BBS1</BD><br>r
+                    </button>
+
+                    <div class="hra doc-header">A</div>
+                    <button class="ca0 doc-cell" onclick="docShow('LDY');">
+                        <BD>LDY</BD><br>#
+                    </button>
+                    <button class="ca1 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>(z,X)
+                    </button>
+                    <button class="ca2 doc-cell" onclick="docShow('LDX');">
+                        <BD>LDX</BD><br>#
+                    </button>
+                    <button class="ca3 doc-cell" disabled>&nbsp;</button>
+                    <button class="ca4 doc-cell" onclick="docShow('LDY');">
+                        <BD>LDY</BD><br>z
+                    </button>
+                    <button class="ca5 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>z
+                    </button>
+                    <button class="ca6 doc-cell" onclick="docShow('LDX');">
+                        <BD>LDX</BD><br>z
+                    </button>
+                    <button class="ca7 doc-cell" onclick="docShow('SMB', 2);">
+                        <BD>SMB2</BD><br>z
+                    </button>
+                    <button class="ca8 doc-cell" onclick="docShow('TAY');">
+                        <BD>TAY</BD><br>i
+                    </button>
+                    <button class="ca9 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>#
+                    </button>
+                    <button class="caa doc-cell" onclick="docShow('TAX');">
+                        <BD>TAX</BD><br>i
+                    </button>
+                    <button class="cab doc-cell" disabled>&nbsp;</button>
+                    <button class="cac doc-cell" onclick="docShow('LDY');">
+                        <BD>LDY</BD><br>a
+                    </button>
+                    <button class="cad doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>a
+                    </button>
+                    <button class="cae doc-cell" onclick="docShow('LDX');">
+                        <BD>LDX</BD><br>a
+                    </button>
+                    <button class="caf doc-cell" onclick="docShow('BBS', 2);">
+                        <BD>BBS2</BD><br>r
+                    </button>
+
+                    <div class="hrb doc-header">B</div>
+                    <button class="cb0 doc-cell" onclick="docShow('BCS');">
+                        <BD>BCS</BD><br>r
+                    </button>
+                    <button class="cb1 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>(z),Y
+                    </button>
+                    <button class="cb2 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>(z)
+                    </button>
+                    <button class="cb3 doc-cell" disabled>&nbsp;</button>
+                    <button class="cb4 doc-cell" onclick="docShow('LDY');">
+                        <BD>LDY</BD><br>z,X
+                    </button>
+                    <button class="cb5 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>z,X
+                    </button>
+                    <button class="cb6 doc-cell" onclick="docShow('LDX');">
+                        <BD>LDX</BD><br>z,Y
+                    </button>
+                    <button class="cb7 doc-cell" onclick="docShow('SMB', 3);">
+                        <BD>SMB3</BD><br>z
+                    </button>
+                    <button class="cb8 doc-cell" onclick="docShow('CLV');">
+                        <BD>CLV</BD><br>i
+                    </button>
+                    <button class="cb9 doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>a,Y
+                    </button>
+                    <button class="cba doc-cell" onclick="docShow('TSX');">
+                        <BD>TSX</BD><br>i
+                    </button>
+                    <button class="cbb doc-cell" disabled>&nbsp;</button>
+                    <button class="cbc doc-cell" onclick="docShow('LDY');">
+                        <BD>LDY</BD><br>a,X
+                    </button>
+                    <button class="cbd doc-cell" onclick="docShow('LDA');">
+                        <BD>LDA</BD><br>a,X
+                    </button>
+                    <button class="cbe doc-cell" onclick="docShow('LDX');">
+                        <BD>LDX</BD><br>a,Y
+                    </button>
+                    <button class="cbf doc-cell" onclick="docShow('BBS', 3);">
+                        <BD>BBS3</BD><br>r
+                    </button>
+
+                    <div class="hrc doc-header">C</div>
+                    <button class="cc0 doc-cell" onclick="docShow('CPY');">
+                        <BD>CPY</BD><br>#
+                    </button>
+                    <button class="cc1 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>(z,X)
+                    </button>
+                    <button class="cc2 doc-cell" disabled>&nbsp;</button>
+                    <button class="cc3 doc-cell" disabled>&nbsp;</button>
+                    <button class="cc4 doc-cell" onclick="docShow('CPY');">
+                        <BD>CPY</BD><br>z
+                    </button>
+                    <button class="cc5 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>z
+                    </button>
+                    <button class="cc6 doc-cell" onclick="docShow('DEC');">
+                        <BD>DEC</BD><br>z
+                    </button>
+                    <button class="cc7 doc-cell" onclick="docShow('SMB', 4);">
+                        <BD>SMB4</BD><br>z
+                    </button>
+                    <button class="cc8 doc-cell" onclick="docShow('INY');">
+                        <BD>INY</BD><br>i
+                    </button>
+                    <button class="cc9 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>#
+                    </button>
+                    <button class="cca doc-cell" onclick="docShow('DEX');">
+                        <BD>DEX</BD><br>i
+                    </button>
+                    <button class="ccb doc-cell" onclick="docShow('WAI');">
+                        <BD>WAI</BD><br>i
+                    </button>
+                    <button class="ccc doc-cell" onclick="docShow('CPY');">
+                        <BD>CPY</BD><br>a
+                    </button>
+                    <button class="ccd doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>a
+                    </button>
+                    <button class="cce doc-cell" onclick="docShow('DEC');">
+                        <BD>DEC</BD><br>a
+                    </button>
+                    <button class="ccf doc-cell" onclick="docShow('BBS', 4);">
+                        <BD>BBS4</BD><br>r
+                    </button>
+
+                    <div class="hrd doc-header">D</div>
+                    <button class="cd0 doc-cell" onclick="docShow('BNE', 4);">
+                        <BD>BNE</BD><br>r
+                    </button>
+                    <button class="cd1 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>(z),Y
+                    </button>
+                    <button class="cd2 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>(z)
+                    </button>
+                    <button class="cd3 doc-cell" disabled>&nbsp;</button>
+                    <button class="cd4 doc-cell" disabled>&nbsp;</button>
+                    <button class="cd5 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>z,X
+                    </button>
+                    <button class="cd6 doc-cell" onclick="docShow('DEC');">
+                        <BD>DEC</BD><br>z,X
+                    </button>
+                    <button class="cd7 doc-cell" onclick="docShow('SMB', 5);">
+                        <BD>SMB5</BD><br>z
+                    </button>
+                    <button class="cd8 doc-cell" onclick="docShow('CLD');">
+                        <BD>CLD</BD><br>i
+                    </button>
+                    <button class="cd9 doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>a,Y
+                    </button>
+                    <button class="cda doc-cell" onclick="docShow('PHX');">
+                        <BD>PHX</BD><br>s
+                    </button>
+                    <button class="cdb doc-cell" onclick="docShow('STP');">
+                        <BD>STP</BD><br>i
+                    </button>
+                    <button class="cdc doc-cell" disabled>&nbsp;</button>
+                    <button class="cdd doc-cell" onclick="docShow('CMP');">
+                        <BD>CMP</BD><br>a,X
+                    </button>
+                    <button class="cde doc-cell" onclick="docShow('DEC');">
+                        <BD>DEC</BD><br>a,X
+                    </button>
+                    <button class="cdf doc-cell" onclick="docShow('BBS', 5);">
+                        <BD>BBS5</BD><br>r
+                    </button>
+
+                    <div class="hre doc-header">E</div>
+                    <button class="ce0 doc-cell" onclick="docShow('CPX');">
+                        <BD>CPX</BD><br>#
+                    </button>
+                    <button class="ce1 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>(z,X)
+                    </button>
+                    <button class="ce2 doc-cell" disabled>&nbsp;</button>
+                    <button class="ce3 doc-cell" disabled>&nbsp;</button>
+                    <button class="ce4 doc-cell" onclick="docShow('CPX');">
+                        <BD>CPX</BD><br>z
+                    </button>
+                    <button class="ce5 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>z
+                    </button>
+                    <button class="ce6 doc-cell" onclick="docShow('INC');">
+                        <BD>INC</BD><br>z
+                    </button>
+                    <button class="ce7 doc-cell" onclick="docShow('SMB', 6);">
+                        <BD>SMB6</BD><br>z
+                    </button>
+                    <button class="ce8 doc-cell" onclick="docShow('INX');">
+                        <BD>INX</BD><br>i
+                    </button>
+                    <button class="ce9 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>#
+                    </button>
+                    <button class="cea doc-cell" onclick="docShow('NOP');">
+                        <BD>NOP</BD><br>i
+                    </button>
+                    <button class="ceb doc-cell" disabled>&nbsp;</button>
+                    <button class="cec doc-cell" onclick="docShow('CPX');">
+                        <BD>CPX</BD><br>a
+                    </button>
+                    <button class="ced doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>a
+                    </button>
+                    <button class="cee doc-cell" onclick="docShow('INC');">
+                        <BD>INC</BD><br>a
+                    </button>
+                    <button class="cef doc-cell" onclick="docShow('BBS', 6);">
+                        <BD>BBS6</BD><br>r
+                    </button>
+
+                    <div class="hrf doc-header">F</div>
+                    <button class="cf0 doc-cell" onclick="docShow('BEQ');">
+                        <BD>BEQ</BD><br>r
+                    </button>
+                    <button class="cf1 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>(z),Y
+                    </button>
+                    <button class="cf2 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>(z)
+                    </button>
+                    <button class="cf3 doc-cell" disabled>&nbsp;</button>
+                    <button class="cf4 doc-cell" disabled>&nbsp;</button>
+                    <button class="cf5 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>z,X
+                    </button>
+                    <button class="cf6 doc-cell" onclick="docShow('INC');">
+                        <BD>INC</BD><br>z,X
+                    </button>
+                    <button class="cf7 doc-cell" onclick="docShow('SMB', 7);">
+                        <BD>SMB7</BD><br>z
+                    </button>
+                    <button class="cf8 doc-cell" onclick="docShow('SED');">
+                        <BD>SED</BD><br>i
+                    </button>
+                    <button class="cf9 doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>a,Y
+                    </button>
+                    <button class="cfa doc-cell" onclick="docShow('PLX');">
+                        <BD>PLX</BD><br>s
+                    </button>
+                    <button class="cfb doc-cell" disabled>&nbsp;</button>
+                    <button class="cfc doc-cell" disabled>&nbsp;</button>
+                    <button class="cfd doc-cell" onclick="docShow('SBC');">
+                        <BD>SBC</BD><br>a,X
+                    </button>
+                    <button class="cfe doc-cell" onclick="docShow('INC');">
+                        <BD>INC</BD><br>a,X
+                    </button>
+                    <button class="cff doc-cell" onclick="docShow('BBS', 7);">
+                        <BD>BBS7</BD><br>r
+                    </button>
+                </div>
+            </div>
         </div>
-      </div>
-
-      <div class="monitorControls">
-        <label for="monitoring">Monitor</label>
-        <input type="checkbox" class="monitoring" name="monitoring" />
-
-        <label for="start">Start: $</label>
-        <input type="text" value="0" class="start" name="start" />
-        <label for="length">Length: $</label>
-        <input type="text" value="ff" class="length" name="length" />
-      </div>
-      <div class="monitor"><pre><code></code></pre></div>
-      <div class="messages"><pre><code></code></pre></div>
-
-      <div class="notes" style="display: none">Notes:
-
-Memory location $fe contains a new random byte on every instruction.
-Memory location $ff contains the ascii code of the last key pressed.
-
-Memory locations $200 to $5ff map to the screen pixels. Different values will
-draw different colour pixels. The colours are:
-
-$0: Black
-$1: White
-$2: Red
-$3: Cyan
-$4: Purple
-$5: Green
-$6: Blue
-$7: Yellow
-$8: Orange
-$9: Brown
-$a: Light red
-$b: Dark grey
-$c: Grey
-$d: Light green
-$e: Light blue
-$f: Light grey
     </div>
 
-    <script src="es5-shim.js"></script>
+    <div id="doc-modal" class="w3-modal">
+        <div class="w3-modal-content">
+            <div class="w3-container">
+                <span onclick="document.getElementById('doc-modal').style.display='none'" class="w3-button w3-display-topright">&times;</span>
+                <div class="w3-panel">
+                    <h2 id="doc-title"></h2>
+                    <h3 id="doc-description"></h3>
+                    <p id="doc-example"></p>
+                    <div class="doc-bold">Status Register:</div>
+                    <div class="w3-cell-row">
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">N<span class="w3-tiny">/7</span></header>
+                            <div id="doc-sr-7"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">V<span class="w3-tiny">/6</span></header>
+                            <div id="doc-sr-6"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">U<span class="w3-tiny">/5</span></header>
+                            <div id="doc-sr-5"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">B<span class="w3-tiny">/4</span></header>
+                            <div id="doc-sr-4"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">D<span class="w3-tiny">/3</span></header>
+                            <div id="doc-sr-3"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">I<span class="w3-tiny">/2</span></header>
+                            <div id="doc-sr-2"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">Z<span class="w3-tiny">/1</span></header>
+                            <div id="doc-sr-1"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:12.5%">
+                            <header class="w3-blue w3-small doc-bold">C<span class="w3-tiny">/0</span></header>
+                            <div id="doc-sr-0"></div>
+                        </div>
+                    </div>
+                    <div class="doc-bold">Operation Codes:</div>
+                    <div class="w3-cell-row">
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">a</header>
+                            <div id="doc-oc-0"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">(A,X)</header>
+                            <div id="doc-oc-1"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">A,X</header>
+                            <div id="doc-oc-2"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">A,Y</header>
+                            <div id="doc-oc-3"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">(a)</header>
+                            <div id="doc-oc-4"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">A</header>
+                            <div id="doc-oc-5"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">#</header>
+                            <div id="doc-oc-6"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">i</header>
+                            <div id="doc-oc-7"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">r</header>
+                            <div id="doc-oc-8"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">s</header>
+                            <div id="doc-oc-9"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">z</header>
+                            <div id="doc-oc-a"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">(z,X)</header>
+                            <div id="doc-oc-b"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">z,X</header>
+                            <div id="doc-oc-c"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">z,Y</header>
+                            <div id="doc-oc-d"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">(z)</header>
+                            <div id="doc-oc-e"></div>
+                        </div>
+                        <div class="w3-cell w3-center doc-padding-cell" style="width:6.25%">
+                            <header class="w3-blue w3-small doc-bold">(z),y</header>
+                            <div id="doc-oc-f"></div>
+                        </div>
+                    </div>
+
+                    <!--
+                    <table class="w3-table w3-centered">
+                        <thead class="w3-light-grey">
+                            <th>a</th>
+                            <th>(A,X)</th>
+                            <th>A,X</th>
+                            <th>A,Y</th>
+                            <th>(A)</th>
+                            <th>#</th>
+                            <th>i</th>
+                            <th>r</th>
+                            <th>s</th>
+                            <th>z</th>
+                            <th>z,X</th>
+                            <th>(z,X)</th>
+                            <th>z,X</th>
+                            <th>z,Y</th>
+                            <th>(z)</th>
+                            <th>(z),y</th>
+                        </thead>
+                        <tr>
+                            <td id="doc-oc-0">&nbsp;</td>
+                            <td id="doc-oc-1">&nbsp;</td>
+                            <td id="doc-oc-2">&nbsp;</td>
+                            <td id="doc-oc-3">&nbsp;</td>
+                            <td id="doc-oc-4">&nbsp;</td>
+                            <td id="doc-oc-5">&nbsp;</td>
+                            <td id="doc-oc-6">&nbsp;</td>
+                            <td id="doc-oc-7">&nbsp;</td>
+                            <td id="doc-oc-8">&nbsp;</td>
+                            <td id="doc-oc-9">&nbsp;</td>
+                            <td id="doc-oc-a">&nbsp;</td>
+                            <td id="doc-oc-b">&nbsp;</td>
+                            <td id="doc-oc-c">&nbsp;</td>
+                            <td id="doc-oc-d">&nbsp;</td>
+                            <td id="doc-oc-e">&nbsp;</td>
+                            <td id="doc-oc-f">&nbsp;</td>
+                        </tr>
+                    </table>
+                    -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <script src="js/es5-shim.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script src="assembler.js"></script>
-  </body>
+    <script src="js/assembler.js"></script>
+    <script src="js/doc.js"></script>
+
+</body>
+
 </html>

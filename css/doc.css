@@ -1,0 +1,1343 @@
+.doc {
+  margin: 5px;
+  border: 1px;
+  display: grid;
+  grid-template-columns: 20px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px 48px;
+  grid-template-rows: 13px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px 36px;
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "hcr hc0 hc1 hc2 hc3 hc4 hc5 hc6 hc7 hc8 hc9 hca hcb hcc hcd hce hcf"
+    "hr0 c00 c01 c02 c03 c04 c05 c06 c07 c08 c09 c0a c0b c0c c0d c0e c0f"
+    "hr1 c10 c11 c12 c13 c14 c15 c16 c17 c18 c19 c1a c1b c1c c1d c1e c1f"
+    "hr2 c20 c21 c22 c23 c24 c25 c26 c27 c28 c29 c2a c2b c2c c2d c2e c2f"
+    "hr3 c30 c31 c32 c33 c34 c35 c36 c37 c38 c39 c3a c3b c3c c3d c3e c3f"
+    "hr4 c40 c41 c42 c43 c44 c45 c46 c47 c48 c49 c4a c4b c4c c4d c4e c4f"
+    "hr5 c50 c51 c52 c53 c54 c55 c56 c57 c58 c59 c5a c5b c5c c5d c5e c5f"
+    "hr6 c60 c61 c62 c63 c64 c65 c66 c67 c68 c69 c6a c6b c6c c6d c6e c6f"
+    "hr7 c70 c71 c72 c73 c74 c75 c76 c77 c78 c79 c7a c7b c7c c7d c7e c7f"
+    "hr8 c80 c81 c82 c83 c84 c85 c86 c87 c88 c89 c8a c8b c8c c8d c8e c8f"
+    "hr9 c90 c91 c92 c93 c94 c95 c96 c97 c98 c99 c9a c9b c9c c9d c9e c9f"
+    "hra ca0 ca1 ca2 ca3 ca4 ca5 ca6 ca7 ca8 ca9 caa cab cac cad cae caf"
+    "hrb cb0 cb1 cb2 cb3 cb4 cb5 cb6 cb7 cb8 cb9 cba cbb cbc cbd cbe cbf"
+    "hrc cc0 cc1 cc2 cc3 cc4 cc5 cc6 cc7 cc8 cc9 cca ccb ccc ccd cce ccf"
+    "hrd cd0 cd1 cd2 cd3 cd4 cd5 cd6 cd7 cd8 cd9 cda cdb cdc cdd cde cdf"
+    "hre ce0 ce1 ce2 ce3 ce4 ce5 ce6 ce7 ce8 ce9 cea ceb cec ced cee cef"
+    "hrf cf0 cf1 cf2 cf3 cf4 cf5 cf6 cf7 cf8 cf9 cfa cfb cfc cfd cfe cff";
+}
+
+.doc-header {
+  display: flex;
+  width: auto;
+  height: auto;
+  margin: 1px;
+  padding: 0px;
+  border-radius: 10px;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 10px !important;
+  font-family: monospace !important;
+  font-weight: 900 !important;
+  font-size: 12px !important;
+}
+
+.doc-cell,
+.doc-cell:hover {
+  display: table;
+  width: auto;
+  height: auto;
+  margin: 1px;
+  padding: 0px;
+  border-radius: 5px;
+  /* border: 1px solid #000 !important; */
+  text-align: center;
+  font-size: 10px !important;
+  font-family: monospace;
+  cursor: pointer;
+  color: #fff !important;
+  background-color: #2196f3 !important;
+}
+
+.doc-cell:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.doc-blue,
+.doc-hover-blue:hover {
+  color: #fff !important;
+  background-color: #2196f3 !important;
+}
+
+BD {
+  font-weight: 900 !important;
+  font-size: 12px !important;
+}
+
+.doc-bold {
+  font-weight: 900 !important;
+}
+
+.doc-padding-cell {
+  padding: 2px 1px !important;
+}
+
+.doc-modal {
+  z-index: 3;
+  display: none;
+  padding-top: 100px;
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+  background-color: rgb(0, 0, 0);
+  background-color: rgba(0, 0, 0, 0.4);
+}
+.doc-modal-content {
+  margin: auto;
+  background-color: #fff;
+  position: relative;
+  padding: 0;
+  outline: 0;
+  width: 600px;
+}
+
+.doc-container{
+  padding: 4px;
+}
+
+.doc-container:after,
+.doc-container:before {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.doc-display-topright {
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.doc-btn {
+  border: none;
+  display: inline-block;
+  padding: 8px 16px;
+  vertical-align: middle;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background-color: inherit;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.doc-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.3;
+}
+
+.doc-btn:hover {
+  color: #000 !important;
+  background-color: #ccc !important;
+}
+
+/** header **/
+
+.hcr {
+  grid-area: hcr;
+}
+
+.hc0 {
+  grid-area: hc0;
+}
+
+.hc1 {
+  grid-area: hc1;
+}
+
+.hc2 {
+  grid-area: hc2;
+}
+
+.hc3 {
+  grid-area: hc3;
+}
+
+.hc4 {
+  grid-area: hc4;
+}
+
+.hc5 {
+  grid-area: hc5;
+}
+
+.hc6 {
+  grid-area: hc6;
+}
+
+.hc7 {
+  grid-area: hc7;
+}
+
+.hc8 {
+  grid-area: hc8;
+}
+
+.hc9 {
+  grid-area: hc9;
+}
+
+.hca {
+  grid-area: hca;
+}
+
+.hcb {
+  grid-area: hcb;
+}
+
+.hcc {
+  grid-area: hcc;
+}
+
+.hcd {
+  grid-area: hcd;
+}
+
+.hce {
+  grid-area: hce;
+}
+
+.hcf {
+  grid-area: hcf;
+}
+
+/** row 0 **/
+
+.hr0 {
+  grid-area: hr0;
+}
+
+.h00 {
+  grid-area: h00;
+}
+
+.h01 {
+  grid-area: h01;
+}
+
+.h02 {
+  grid-area: h02;
+}
+
+.h03 {
+  grid-area: h03;
+}
+
+.h04 {
+  grid-area: h04;
+}
+
+.h05 {
+  grid-area: h05;
+}
+
+.h06 {
+  grid-area: h06;
+}
+
+.h07 {
+  grid-area: h07;
+}
+
+.h08 {
+  grid-area: h08;
+}
+
+.h09 {
+  grid-area: h09;
+}
+
+.h0a {
+  grid-area: h0a;
+}
+
+.h0b {
+  grid-area: h0b;
+}
+
+.h0c {
+  grid-area: h0c;
+}
+
+.h0d {
+  grid-area: h0d;
+}
+
+.h0e {
+  grid-area: h0e;
+}
+
+.h0f {
+  grid-area: h0f;
+}
+
+/** row 1 **/
+
+.hr1 {
+  grid-area: hr1;
+}
+
+.h10 {
+  grid-area: h10;
+}
+
+.h11 {
+  grid-area: h11;
+}
+
+.h12 {
+  grid-area: h12;
+}
+
+.h13 {
+  grid-area: h13;
+}
+
+.h14 {
+  grid-area: h14;
+}
+
+.h15 {
+  grid-area: h15;
+}
+
+.h16 {
+  grid-area: h16;
+}
+
+.h17 {
+  grid-area: h17;
+}
+
+.h18 {
+  grid-area: h18;
+}
+
+.h19 {
+  grid-area: h19;
+}
+
+.h1a {
+  grid-area: h1a;
+}
+
+.h1b {
+  grid-area: h1b;
+}
+
+.h1c {
+  grid-area: h1c;
+}
+
+.h1d {
+  grid-area: h1d;
+}
+
+.h1e {
+  grid-area: h1e;
+}
+
+.h1f {
+  grid-area: h1f;
+}
+
+/** row 2 **/
+
+.hr2 {
+  grid-area: hr2;
+}
+
+.h20 {
+  grid-area: h20;
+}
+
+.h21 {
+  grid-area: h21;
+}
+
+.h22 {
+  grid-area: h22;
+}
+
+.h23 {
+  grid-area: h23;
+}
+
+.h24 {
+  grid-area: h24;
+}
+
+.h25 {
+  grid-area: h25;
+}
+
+.h26 {
+  grid-area: h26;
+}
+
+.h27 {
+  grid-area: h27;
+}
+
+.h28 {
+  grid-area: h28;
+}
+
+.h29 {
+  grid-area: h29;
+}
+
+.h2a {
+  grid-area: h2a;
+}
+
+.h2b {
+  grid-area: h2b;
+}
+
+.h2c {
+  grid-area: h2c;
+}
+
+.h2d {
+  grid-area: h2d;
+}
+
+.h2e {
+  grid-area: h2e;
+}
+
+.h2f {
+  grid-area: h2f;
+}
+
+/** row 3 **/
+
+.hr3 {
+  grid-area: hr3;
+}
+
+.h30 {
+  grid-area: h30;
+}
+
+.h31 {
+  grid-area: h31;
+}
+
+.h32 {
+  grid-area: h32;
+}
+
+.h33 {
+  grid-area: h33;
+}
+
+.h34 {
+  grid-area: h34;
+}
+
+.h35 {
+  grid-area: h35;
+}
+
+.h36 {
+  grid-area: h36;
+}
+
+.h37 {
+  grid-area: h37;
+}
+
+.h38 {
+  grid-area: h38;
+}
+
+.h39 {
+  grid-area: h39;
+}
+
+.h3a {
+  grid-area: h3a;
+}
+
+.h3b {
+  grid-area: h3b;
+}
+
+.h3c {
+  grid-area: h3c;
+}
+
+.h3d {
+  grid-area: h3d;
+}
+
+.h3e {
+  grid-area: h3e;
+}
+
+.h3f {
+  grid-area: h3f;
+}
+
+/** row 4 **/
+
+.hr4 {
+  grid-area: hr4;
+}
+
+.h40 {
+  grid-area: h40;
+}
+
+.h41 {
+  grid-area: h41;
+}
+
+.h42 {
+  grid-area: h42;
+}
+
+.h43 {
+  grid-area: h43;
+}
+
+.h44 {
+  grid-area: h44;
+}
+
+.h45 {
+  grid-area: h45;
+}
+
+.h46 {
+  grid-area: h46;
+}
+
+.h47 {
+  grid-area: h47;
+}
+
+.h48 {
+  grid-area: h48;
+}
+
+.h49 {
+  grid-area: h49;
+}
+
+.h4a {
+  grid-area: h4a;
+}
+
+.h4b {
+  grid-area: h4b;
+}
+
+.h4c {
+  grid-area: h4c;
+}
+
+.h4d {
+  grid-area: h4d;
+}
+
+.h4e {
+  grid-area: h4e;
+}
+
+.h4f {
+  grid-area: h4f;
+}
+
+/** row 5 **/
+
+.hr5 {
+  grid-area: hr5;
+}
+
+.h50 {
+  grid-area: h50;
+}
+
+.h51 {
+  grid-area: h51;
+}
+
+.h52 {
+  grid-area: h52;
+}
+
+.h53 {
+  grid-area: h53;
+}
+
+.h54 {
+  grid-area: h54;
+}
+
+.h55 {
+  grid-area: h55;
+}
+
+.h56 {
+  grid-area: h56;
+}
+
+.h57 {
+  grid-area: h57;
+}
+
+.h58 {
+  grid-area: h58;
+}
+
+.h59 {
+  grid-area: h59;
+}
+
+.h5a {
+  grid-area: h5a;
+}
+
+.h5b {
+  grid-area: h5b;
+}
+
+.h5c {
+  grid-area: h5c;
+}
+
+.h5d {
+  grid-area: h5d;
+}
+
+.h5e {
+  grid-area: h5e;
+}
+
+.h5f {
+  grid-area: h5f;
+}
+
+/** row 6 **/
+
+.hr6 {
+  grid-area: hr6;
+}
+
+.h60 {
+  grid-area: h60;
+}
+
+.h61 {
+  grid-area: h61;
+}
+
+.h62 {
+  grid-area: h62;
+}
+
+.h63 {
+  grid-area: h63;
+}
+
+.h64 {
+  grid-area: h64;
+}
+
+.h65 {
+  grid-area: h65;
+}
+
+.h66 {
+  grid-area: h66;
+}
+
+.h67 {
+  grid-area: h67;
+}
+
+.h68 {
+  grid-area: h68;
+}
+
+.h69 {
+  grid-area: h69;
+}
+
+.h6a {
+  grid-area: h6a;
+}
+
+.h6b {
+  grid-area: h6b;
+}
+
+.h6c {
+  grid-area: h6c;
+}
+
+.h6d {
+  grid-area: h6d;
+}
+
+.h6e {
+  grid-area: h6e;
+}
+
+.h6f {
+  grid-area: h6f;
+}
+
+/** row 7 **/
+
+.hr7 {
+  grid-area: hr7;
+}
+
+.h70 {
+  grid-area: h70;
+}
+
+.h71 {
+  grid-area: h71;
+}
+
+.h72 {
+  grid-area: h72;
+}
+
+.h73 {
+  grid-area: h73;
+}
+
+.h74 {
+  grid-area: h74;
+}
+
+.h75 {
+  grid-area: h75;
+}
+
+.h76 {
+  grid-area: h76;
+}
+
+.h77 {
+  grid-area: h77;
+}
+
+.h78 {
+  grid-area: h78;
+}
+
+.h79 {
+  grid-area: h79;
+}
+
+.h7a {
+  grid-area: h7a;
+}
+
+.h7b {
+  grid-area: h7b;
+}
+
+.h7c {
+  grid-area: h7c;
+}
+
+.h7d {
+  grid-area: h7d;
+}
+
+.h7e {
+  grid-area: h7e;
+}
+
+.h7f {
+  grid-area: h7f;
+}
+
+/** row 8 **/
+
+.hr8 {
+  grid-area: hr8;
+}
+
+.h80 {
+  grid-area: h80;
+}
+
+.h81 {
+  grid-area: h81;
+}
+
+.h82 {
+  grid-area: h82;
+}
+
+.h83 {
+  grid-area: h83;
+}
+
+.h84 {
+  grid-area: h84;
+}
+
+.h85 {
+  grid-area: h85;
+}
+
+.h86 {
+  grid-area: h86;
+}
+
+.h87 {
+  grid-area: h87;
+}
+
+.h88 {
+  grid-area: h88;
+}
+
+.h89 {
+  grid-area: h89;
+}
+
+.h8a {
+  grid-area: h8a;
+}
+
+.h8b {
+  grid-area: h8b;
+}
+
+.h8c {
+  grid-area: h8c;
+}
+
+.h8d {
+  grid-area: h8d;
+}
+
+.h8e {
+  grid-area: h8e;
+}
+
+.h8f {
+  grid-area: h8f;
+}
+
+/** row 9 **/
+
+.hr9 {
+  grid-area: hr9;
+}
+
+.h90 {
+  grid-area: h90;
+}
+
+.h91 {
+  grid-area: h91;
+}
+
+.h92 {
+  grid-area: h92;
+}
+
+.h93 {
+  grid-area: h93;
+}
+
+.h94 {
+  grid-area: h94;
+}
+
+.h95 {
+  grid-area: h95;
+}
+
+.h96 {
+  grid-area: h96;
+}
+
+.h97 {
+  grid-area: h97;
+}
+
+.h98 {
+  grid-area: h98;
+}
+
+.h99 {
+  grid-area: h99;
+}
+
+.h9a {
+  grid-area: h9a;
+}
+
+.h9b {
+  grid-area: h9b;
+}
+
+.h9c {
+  grid-area: h9c;
+}
+
+.h9d {
+  grid-area: h9d;
+}
+
+.h9e {
+  grid-area: h9e;
+}
+
+.h9f {
+  grid-area: h9f;
+}
+
+/** row a **/
+
+.hra {
+  grid-area: hra;
+}
+
+.ha0 {
+  grid-area: ha0;
+}
+
+.ha1 {
+  grid-area: ha1;
+}
+
+.ha2 {
+  grid-area: ha2;
+}
+
+.ha3 {
+  grid-area: ha3;
+}
+
+.ha4 {
+  grid-area: ha4;
+}
+
+.ha5 {
+  grid-area: ha5;
+}
+
+.ha6 {
+  grid-area: ha6;
+}
+
+.ha7 {
+  grid-area: ha7;
+}
+
+.ha8 {
+  grid-area: ha8;
+}
+
+.ha9 {
+  grid-area: ha9;
+}
+
+.haa {
+  grid-area: haa;
+}
+
+.hab {
+  grid-area: hab;
+}
+
+.hac {
+  grid-area: hac;
+}
+
+.had {
+  grid-area: had;
+}
+
+.hae {
+  grid-area: hae;
+}
+
+.haf {
+  grid-area: haf;
+}
+
+/** row b **/
+
+.hrb {
+  grid-area: hrb;
+}
+
+.hb0 {
+  grid-area: hb0;
+}
+
+.hb1 {
+  grid-area: hb1;
+}
+
+.hb2 {
+  grid-area: hb2;
+}
+
+.hb3 {
+  grid-area: hb3;
+}
+
+.hb4 {
+  grid-area: hb4;
+}
+
+.hb5 {
+  grid-area: hb5;
+}
+
+.hb6 {
+  grid-area: hb6;
+}
+
+.hb7 {
+  grid-area: hb7;
+}
+
+.hb8 {
+  grid-area: hb8;
+}
+
+.hb9 {
+  grid-area: hb9;
+}
+
+.hba {
+  grid-area: hba;
+}
+
+.hbb {
+  grid-area: hbb;
+}
+
+.hbc {
+  grid-area: hbc;
+}
+
+.hbd {
+  grid-area: hbd;
+}
+
+.hbe {
+  grid-area: hbe;
+}
+
+.hbf {
+  grid-area: hbf;
+}
+
+/** row c **/
+
+.hrc {
+  grid-area: hrc;
+}
+
+.hc0 {
+  grid-area: hc0;
+}
+
+.hc1 {
+  grid-area: hc1;
+}
+
+.hc2 {
+  grid-area: hc2;
+}
+
+.hc3 {
+  grid-area: hc3;
+}
+
+.hc4 {
+  grid-area: hc4;
+}
+
+.hc5 {
+  grid-area: hc5;
+}
+
+.hc6 {
+  grid-area: hc6;
+}
+
+.hc7 {
+  grid-area: hc7;
+}
+
+.hc8 {
+  grid-area: hc8;
+}
+
+.hc9 {
+  grid-area: hc9;
+}
+
+.hca {
+  grid-area: hca;
+}
+
+.hcb {
+  grid-area: hcb;
+}
+
+.hcc {
+  grid-area: hcc;
+}
+
+.hcd {
+  grid-area: hcd;
+}
+
+.hce {
+  grid-area: hce;
+}
+
+.hcf {
+  grid-area: hcf;
+}
+
+/** row d **/
+
+.hrd {
+  grid-area: hrd;
+}
+
+.hd0 {
+  grid-area: hd0;
+}
+
+.hd1 {
+  grid-area: hd1;
+}
+
+.hd2 {
+  grid-area: hd2;
+}
+
+.hd3 {
+  grid-area: hd3;
+}
+
+.hd4 {
+  grid-area: hd4;
+}
+
+.hd5 {
+  grid-area: hd5;
+}
+
+.hd6 {
+  grid-area: hd6;
+}
+
+.hd7 {
+  grid-area: hd7;
+}
+
+.hd8 {
+  grid-area: hd8;
+}
+
+.hd9 {
+  grid-area: hd9;
+}
+
+.hda {
+  grid-area: hda;
+}
+
+.hdb {
+  grid-area: hdb;
+}
+
+.hdc {
+  grid-area: hdc;
+}
+
+.hdd {
+  grid-area: hdd;
+}
+
+.hde {
+  grid-area: hde;
+}
+
+.hdf {
+  grid-area: hdf;
+}
+
+/** row e **/
+
+.hre {
+  grid-area: hre;
+}
+
+.he0 {
+  grid-area: he0;
+}
+
+.he1 {
+  grid-area: he1;
+}
+
+.he2 {
+  grid-area: he2;
+}
+
+.he3 {
+  grid-area: he3;
+}
+
+.he4 {
+  grid-area: he4;
+}
+
+.he5 {
+  grid-area: he5;
+}
+
+.he6 {
+  grid-area: he6;
+}
+
+.he7 {
+  grid-area: he7;
+}
+
+.he8 {
+  grid-area: he8;
+}
+
+.he9 {
+  grid-area: he9;
+}
+
+.hea {
+  grid-area: hea;
+}
+
+.heb {
+  grid-area: heb;
+}
+
+.hec {
+  grid-area: hec;
+}
+
+.hed {
+  grid-area: hed;
+}
+
+.hee {
+  grid-area: hee;
+}
+
+.hef {
+  grid-area: hef;
+}
+
+/** row f **/
+
+.hrf {
+  grid-area: hrf;
+}
+
+.hf0 {
+  grid-area: hf0;
+}
+
+.hf1 {
+  grid-area: hf1;
+}
+
+.hf2 {
+  grid-area: hf2;
+}
+
+.hf3 {
+  grid-area: hf3;
+}
+
+.hf4 {
+  grid-area: hf4;
+}
+
+.hf5 {
+  grid-area: hf5;
+}
+
+.hf6 {
+  grid-area: hf6;
+}
+
+.hf7 {
+  grid-area: hf7;
+}
+
+.hf8 {
+  grid-area: hf8;
+}
+
+.hf9 {
+  grid-area: hf9;
+}
+
+.hfa {
+  grid-area: hfa;
+}
+
+.hfb {
+  grid-area: hfb;
+}
+
+.hfc {
+  grid-area: hfc;
+}
+
+.hfd {
+  grid-area: hfd;
+}
+
+.hfe {
+  grid-area: hfe;
+}
+
+.hff {
+  grid-area: hff;
+}
